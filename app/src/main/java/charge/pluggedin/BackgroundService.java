@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.BatteryManager;
 import android.os.IBinder;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
