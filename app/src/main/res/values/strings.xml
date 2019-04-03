@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">PluggedIn</string>
+    <string name="welcome_text">Welcome to PluggedIn</string>
+
+    <string name="main_menu_title">Main Menu</string>
+    <string name="disable_app_text">Disable App</string>
+    <string name="change_sound_file_text">Change Sound File</string>
+    <string name="plugged_label">Plugged Status: </string>
+    <string name="plugged_status">Status</string>
+
+    <string name="ac_power_text">Plugged In</string>
+    <string name="unplugged_text">Not Plugged In</string>
+</resources>
