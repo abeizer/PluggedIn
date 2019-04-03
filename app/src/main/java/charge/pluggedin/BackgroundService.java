@@ -16,6 +16,7 @@ public class BackgroundService extends Service {
     private int sound_file = R.raw.logan_paul_ahh_sound_effect;
     private MediaPlayer media_player;
     private boolean previous_state;
+    private BroadcastReceiver receiver;
 
     @Override
     public IBinder onBind(Intent intent)
@@ -27,6 +28,8 @@ public class BackgroundService extends Service {
     public void onCreate()
     {
         media_player = MediaPlayer.create(this, sound_file);
+        receiver = createBroadcastReceiver();
+
         Toast.makeText(this, "Service Created", Toast.LENGTH_SHORT).show();
     }
 
@@ -34,15 +37,20 @@ public class BackgroundService extends Service {
     public void onDestroy()
     {
         previous_state = true;
-        Toast.makeText(this, "Service Stopped", Toast.LENGTH_SHORT).show();
+        unregisterReceiver(receiver);
         stopSelf();
+
+        Toast.makeText(this, "Service Stopped", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        previous_state = false;
-        createBroadcastReceiver();
+        previous_state = false; // app just started or service was previously toggled off
+
+        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(receiver, filter);
+
         Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -52,9 +60,9 @@ public class BackgroundService extends Service {
      * If the phone begins to draw AC power, then it is plugged in.
      * Therefore, play the audio.
      */
-    private void createBroadcastReceiver()
+    private BroadcastReceiver createBroadcastReceiver()
     {
-        BroadcastReceiver receiver = new BroadcastReceiver() {
+        BroadcastReceiver br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
@@ -77,7 +85,6 @@ public class BackgroundService extends Service {
                 }
             }
         };
-        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        registerReceiver(receiver, filter);
+        return br;
     }
 }
